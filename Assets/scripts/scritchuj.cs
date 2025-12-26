@@ -6,6 +6,7 @@ public class scritchuj : MonoBehaviour
     void Start()
     {
         int jubel = 0;
+        jubel++;
     }
 
     // Update is called once per frame
