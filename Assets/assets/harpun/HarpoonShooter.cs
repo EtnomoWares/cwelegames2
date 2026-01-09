@@ -84,7 +84,7 @@ public class HarpoonShooter2D : MonoBehaviour
             harpoon.transform.position = Vector3.MoveTowards(
                 harpoon.transform.position,
                 firePoint.position,
-                returnSpeed * Time.deltaTime
+                (returnSpeed * Time.deltaTime)+0.015f    //lina przyspiesza im dłużej leci bo tak to mogłeś w nieskończoność spierdalać przed nią w nieskończoność
             );
 
             RotateHarpoon(harpoon.transform, returnDir);
