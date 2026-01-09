@@ -743,6 +743,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6e8c450418c84c458dfe5679a62843f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  speed: 750
+  maxSpeed: 80
+  linearDamping: 1
+  baseTorque: 20
+  maxTorque: 66
+  torqueRampSpeed: 2.5
+  angularResistance: 0.3
+  maxAngularVelocity: 90
 --- !u!50 &981870249
 Rigidbody2D:
   serializedVersion: 5

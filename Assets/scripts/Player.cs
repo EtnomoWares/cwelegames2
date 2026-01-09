@@ -2,37 +2,52 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // Input
     private float moveHorizontal;
     private float moveVertical;
-    private float rotationPower =50f;
-    private float angularResistance = 3f;
-    private float maxAngularVelocity = 90f;
 
+    [Header("Movement")]
+    public float speed = 220f;
+    public float maxSpeed = 14f;
+    public float linearDamping = 1.2f;
 
-    private float baseTorque = 2f;        // minimalna si³a steru
-    private float maxTorque = 8f;         // maksymalna si³a steru
-    private float torqueRampSpeed = 2.5f; // jak szybko narasta obrót
-
+    [Header("Rotation")]
+    public float baseTorque = 2f;
+    public float maxTorque = 8f;
+    public float torqueRampSpeed = 2.5f;
+    public float angularResistance = 3f;
+    public float maxAngularVelocity = 90f;
 
     private float currentTorque;
+    private Rigidbody2D rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.linearDamping = linearDamping;
+    }
+
     void Update()
     {
         moveHorizontal = Input.GetAxis("Horizontal");
         moveVertical = Input.GetAxis("Vertical");
-
     }
 
     void FixedUpdate()
     {
-        float speed = 150f;
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        Transform transform = GetComponent<Transform>();
-        rb.AddForce(new Vector2(0f,moveVertical * speed * Time.deltaTime), ForceMode2D.Impulse);
-        rb.linearDamping = 10;
+        // Napï¿½d
+        if (Mathf.Abs(moveVertical) > 0.01f)
+        {
+            rb.AddForce(transform.up * moveVertical * speed * Time.fixedDeltaTime, ForceMode2D.Force);
+        }
 
-        if (rb.angularVelocity < -maxAngularVelocity) { rb.angularVelocity = -maxAngularVelocity; }
-        if (rb.angularVelocity > maxAngularVelocity) { rb.angularVelocity = maxAngularVelocity; }
+        // Limit prï¿½dkoï¿½ci
+        if (rb.linearVelocity.magnitude > maxSpeed)
+        {
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
+        }
 
+        // Narastanie momentu obrotowego
         if (Mathf.Abs(moveHorizontal) > 0.01f)
         {
             currentTorque += torqueRampSpeed * Time.fixedDeltaTime;
@@ -43,9 +58,13 @@ public class Player : MonoBehaviour
             currentTorque = 0f;
         }
 
-        rb.AddTorque(-moveHorizontal * rotationPower);
+        // Obrï¿½t
+        rb.AddTorque(-moveHorizontal * currentTorque);
 
-        float resistanceTorque = (-rb.angularVelocity * angularResistance);
-        rb.AddTorque(resistanceTorque);
+        // Opï¿½r obrotu
+        rb.AddTorque(-rb.angularVelocity * angularResistance);
+
+        // Limit prï¿½dkoï¿½ci kï¿½towej
+        rb.angularVelocity = Mathf.Clamp(rb.angularVelocity, -maxAngularVelocity, maxAngularVelocity);
     }
 }
