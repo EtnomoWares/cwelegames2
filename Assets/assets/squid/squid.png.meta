@@ -103,8 +103,8 @@ TextureImporter:
       name: squid_0
       rect:
         serializedVersion: 2
-        x: 112
-        y: 31
+        x: 104
+        y: 41
         width: 721
         height: 1039
       alignment: 0
